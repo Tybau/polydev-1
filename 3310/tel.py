@@ -23,7 +23,7 @@ def main():
     index = 1
     for i in range(1, nbProblems * 2 + 1, 2):
         print(crypt(lines[i], lines[i + 1]))
-    
+
     f.close()
 
 main()
