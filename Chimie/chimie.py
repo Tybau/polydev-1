@@ -65,20 +65,34 @@ def extract_atoms(atoms_string):
     return res
 
 
-data_in = "C2H4O + H2O -> (CH2OH)2"
-data = data_in.split("->")
-atom_res = []
-for i in range(2):
-    data[i] = data[i].strip()
-    atom_res.append(extract_atoms(data[i].strip()))
+def is_matching(equation):
+    data = equation.split("->")
+    atom_res = []
+    for i in range(2):
+        data[i] = data[i].strip()
+        atom_res.append(extract_atoms(data[i].strip()))
 
-error = False
-for atom, nb in atom_res[0].items():
-    if(not(atom in atom_res[1] and nb == atom_res[1][atom])):
-        error = True
-        break
-print("Reaction OK ?", not(error))
-print(atom_res[0])
-print(atom_res[1])
+    for atom, nb in atom_res[0].items():
+        if (not (atom in atom_res[1] and nb == atom_res[1][atom])):
+            return False
+    return True
 
-print(extract_atoms("(CH3(CH2)3O)2"))
+
+FILENAME_IN = "chimie.in"
+compt = 0
+contenu = ""
+f = open(FILENAME_IN, mode="r", encoding="utf8")
+for line in f.readlines():
+    if(compt != 0 and line != ""):
+        if(is_matching(line)):
+            contenu += "OUI\n"
+        else:
+            contenu += "NON\n"
+    compt += 1
+
+f.close()
+
+FILENAME_OUT = "chimie.out"
+f_out = open(FILENAME_OUT, mode="w", encoding="utf8")
+f_out.write(contenu[:-1])
+f_out.close()
